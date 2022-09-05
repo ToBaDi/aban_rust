@@ -70,13 +70,20 @@ mod tests {
         let root = "/";
         let empty = "";
         let aban = "/Aban";
-        let a = "/a";
+        let abs_a = "/a";
         let rel_a = "a";
+        let abs_a_b = "/a/b";
+        let rel_a_b = "a/b";
+        let error = Err(Error::NoDirectory);
+        let res_root = Ok(PathBuf::from(root));
+        let res_aban = Ok(PathBuf::from(aban));
 
-        assert_eq!(sanitize_root_dir_path(&cli, root), Ok(PathBuf::from(root)));
-        assert_eq!(sanitize_root_dir_path(&cli, empty), Err(Error::NoDirectory));
-        assert_eq!(sanitize_root_dir_path(&cli, aban), Ok(PathBuf::from(aban)));
-        assert_eq!(sanitize_root_dir_path(&cli, a), Ok(PathBuf::from(root)));
-        assert_eq!(sanitize_root_dir_path(&cli, rel_a), Err(Error::NoDirectory));
+        assert_eq!(sanitize_root_dir_path(&cli, root), res_root);
+        assert_eq!(sanitize_root_dir_path(&cli, empty), error);
+        assert_eq!(sanitize_root_dir_path(&cli, aban), res_aban);
+        assert_eq!(sanitize_root_dir_path(&cli, abs_a), res_root);
+        assert_eq!(sanitize_root_dir_path(&cli, rel_a), error);
+        assert_eq!(sanitize_root_dir_path(&cli, abs_a_b), error);
+        assert_eq!(sanitize_root_dir_path(&cli, rel_a_b), error);
     }
 }
