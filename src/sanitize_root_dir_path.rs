@@ -65,8 +65,7 @@ mod tests {
 
     #[test]
     fn sanitize_root_dir_path_test() {
-        let cli = Cli::parse();
-        let cli_root = cli.root;
+        let cli = Option::None;
         let root = "/";
         let empty = "";
         let aban = "/Aban";
@@ -78,12 +77,28 @@ mod tests {
         let res_root = Ok(PathBuf::from(root));
         let res_aban = Ok(PathBuf::from(aban));
 
-        assert_eq!(sanitize_root_dir_path(&cli_root, root), res_root);
-        assert_eq!(sanitize_root_dir_path(&cli_root, empty), error);
-        assert_eq!(sanitize_root_dir_path(&cli_root, aban), res_aban);
-        assert_eq!(sanitize_root_dir_path(&cli_root, abs_a), res_root);
-        assert_eq!(sanitize_root_dir_path(&cli_root, rel_a), error);
-        assert_eq!(sanitize_root_dir_path(&cli_root, abs_a_b), error);
-        assert_eq!(sanitize_root_dir_path(&cli_root, rel_a_b), error);
+        assert_eq!(sanitize_root_dir_path(&cli, root), res_root);
+        assert_eq!(sanitize_root_dir_path(&cli, empty), error);
+        assert_eq!(sanitize_root_dir_path(&cli, aban), res_aban);
+        assert_eq!(sanitize_root_dir_path(&cli, abs_a), res_root);
+        assert_eq!(sanitize_root_dir_path(&cli, rel_a), error);
+        assert_eq!(sanitize_root_dir_path(&cli, abs_a_b), error);
+        assert_eq!(sanitize_root_dir_path(&cli, rel_a_b), error);
+
+        let cli_root = Some(PathBuf::from(root));
+        let cli_empty = Some(PathBuf::from(empty));
+        let cli_aban = Some(PathBuf::from(aban));
+        let cli_abs_a = Some(PathBuf::from(abs_a));
+        let cli_rel_a = Some(PathBuf::from(rel_a));
+        let cli_abs_a_b = Some(PathBuf::from(abs_a_b));
+        let cli_rel_a_b = Some(PathBuf::from(rel_a_b));
+
+        assert_eq!(sanitize_root_dir_path(&cli_root, empty), res_root);
+        assert_eq!(sanitize_root_dir_path(&cli_empty, empty), error);
+        assert_eq!(sanitize_root_dir_path(&cli_aban, empty), res_aban);
+        assert_eq!(sanitize_root_dir_path(&cli_abs_a, empty), res_root);
+        assert_eq!(sanitize_root_dir_path(&cli_rel_a, empty), error);
+        assert_eq!(sanitize_root_dir_path(&cli_abs_a_b, empty), error);
+        assert_eq!(sanitize_root_dir_path(&cli_rel_a_b, empty), error);
     }
 }
