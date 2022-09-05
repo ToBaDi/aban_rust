@@ -6,9 +6,10 @@ pub enum Error {
     NoDirectory,
 }
 
-/// Try to make a proper directory path from cli_root
-/// or command-line argument.
-/// arg_path is suppose to came from [`std::env::args()`].
+/// Try to make a proper directory path from command-line argument.
+/// - cli_root is suppose fo came from [`crate::Cli`]
+/// - arg_path is suppose to came from [`std::env::args()`].
+///
 ///
 pub fn sanitize_root_dir_path(
     cli_root: &Option<PathBuf>,
