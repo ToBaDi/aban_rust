@@ -1,5 +1,4 @@
-use crate::Cli;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 #[derive(PartialEq, Debug)]
 pub enum Error {
@@ -60,8 +59,7 @@ pub fn sanitize_root_dir_path(
 mod tests {
     use std::path::PathBuf;
 
-    use crate::{sanitize_root_dir_path, sanitize_root_dir_path::Error, Cli};
-    use clap::Parser;
+    use crate::{sanitize_root_dir_path, sanitize_root_dir_path::Error};
 
     #[test]
     fn sanitize_root_dir_path_test() {
