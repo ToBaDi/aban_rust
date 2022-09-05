@@ -11,16 +11,15 @@ pub enum Error {
 /// or command-line argument.
 /// arg_path is suppose to came from [`std::env::args()`].
 ///
-pub fn sanitize_root_dir_path(cli: &Cli, arg_path: &str) -> Result<PathBuf, Error> {
-    // Get path from arguments.
-    let arg_root = Path::new(arg_path);
-    let cli_root = &cli.root;
-
+pub fn sanitize_root_dir_path(
+    cli_root: &Option<PathBuf>,
+    arg_path: &str,
+) -> Result<PathBuf, Error> {
     // Check if Cli input is usable as PathBuf.
     // Or turn arg_root path to PathBuf.
     let path = match cli_root {
         Some(path) => path.to_owned(),
-        None => arg_root.to_owned(),
+        None => PathBuf::from(arg_path),
     };
 
     // // Some helper booleans.
@@ -67,6 +66,7 @@ mod tests {
     #[test]
     fn sanitize_root_dir_path_test() {
         let cli = Cli::parse();
+        let cli_root = cli.root;
         let root = "/";
         let empty = "";
         let aban = "/Aban";
@@ -78,12 +78,12 @@ mod tests {
         let res_root = Ok(PathBuf::from(root));
         let res_aban = Ok(PathBuf::from(aban));
 
-        assert_eq!(sanitize_root_dir_path(&cli, root), res_root);
-        assert_eq!(sanitize_root_dir_path(&cli, empty), error);
-        assert_eq!(sanitize_root_dir_path(&cli, aban), res_aban);
-        assert_eq!(sanitize_root_dir_path(&cli, abs_a), res_root);
-        assert_eq!(sanitize_root_dir_path(&cli, rel_a), error);
-        assert_eq!(sanitize_root_dir_path(&cli, abs_a_b), error);
-        assert_eq!(sanitize_root_dir_path(&cli, rel_a_b), error);
+        assert_eq!(sanitize_root_dir_path(&cli_root, root), res_root);
+        assert_eq!(sanitize_root_dir_path(&cli_root, empty), error);
+        assert_eq!(sanitize_root_dir_path(&cli_root, aban), res_aban);
+        assert_eq!(sanitize_root_dir_path(&cli_root, abs_a), res_root);
+        assert_eq!(sanitize_root_dir_path(&cli_root, rel_a), error);
+        assert_eq!(sanitize_root_dir_path(&cli_root, abs_a_b), error);
+        assert_eq!(sanitize_root_dir_path(&cli_root, rel_a_b), error);
     }
 }
