@@ -70,11 +70,13 @@ mod tests {
         let root = "/";
         let empty = "";
         let aban = "/Aban";
-        let a = "a";
+        let a = "/a";
+        let rel_a = "a";
 
         assert_eq!(sanitize_root_dir_path(&cli, root), Ok(PathBuf::from(root)));
         assert_eq!(sanitize_root_dir_path(&cli, empty), Err(Error::NoDirectory));
         assert_eq!(sanitize_root_dir_path(&cli, aban), Ok(PathBuf::from(aban)));
-        assert_eq!(sanitize_root_dir_path(&cli, a), Err(Error::NoDirectory));
+        assert_eq!(sanitize_root_dir_path(&cli, a), Ok(PathBuf::from(root)));
+        assert_eq!(sanitize_root_dir_path(&cli, rel_a), Err(Error::NoDirectory));
     }
 }
