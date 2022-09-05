@@ -1,20 +1,18 @@
+mod cli;
 mod file_system;
-use clap;
+mod sanitize_root_dir_path;
 
+use clap::Parser;
+pub use cli::Cli;
 pub use file_system::FileSystem;
+pub use sanitize_root_dir_path::sanitize_root_dir_path;
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    let path_file = std::path::Path::new(&args[0]);
-    let mut path_file_ancestors = path_file.ancestors();
-    path_file_ancestors.next();
-    let path_dir = path_file_ancestors.next().unwrap();
+    let arg_path = std::env::args().next().unwrap();
+    let cli = Cli::parse();
+    let root = sanitize_root_dir_path(&cli, arg_path.as_str()).unwrap();
 
-    let file_system = FileSystem::new(path_dir);
+    let file_system = FileSystem::new(root.as_path());
 
     println!("{}", file_system.root().display());
-
-    // find_aban_dot_ab(&file_system);
 }
-
-pub fn find_aban_dot_ab(file_system: &FileSystem) {}
