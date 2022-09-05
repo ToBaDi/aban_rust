@@ -6,7 +6,7 @@ pub enum Error {
     NoDirectory,
 }
 
-/// Try to make a proper directory path from [`Cli`]
+/// Try to make a proper directory path from cli_root
 /// or command-line argument.
 /// arg_path is suppose to came from [`std::env::args()`].
 ///
