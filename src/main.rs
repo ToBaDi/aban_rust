@@ -19,5 +19,11 @@ fn main() {
     let root = root.unwrap();
     let file_system = FileSystem::new(root.as_path());
 
-    println!("{}\n", file_system.root().display());
+    println!("Project Root Directory: {}\n", file_system.root().display());
+
+    let aban_dot_ab = AbanDotAbFile::new(&file_system);
+
+    if let Err(error) = aban_dot_ab {
+        println!("Error from Aban.ab File: {:?}\n", error);
+    }
 }

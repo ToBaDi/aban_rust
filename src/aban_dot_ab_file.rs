@@ -7,6 +7,7 @@ use std::{
 use crate::FileSystem;
 
 /// If [`AbanDotAbFile`].new() Failed.
+#[derive(Debug)]
 pub enum Error {
     FileNotFind,
     MultipleFile,
