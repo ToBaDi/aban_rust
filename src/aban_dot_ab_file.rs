@@ -4,7 +4,7 @@ use std::{
     io::{self, Read},
 };
 
-use crate::FileSystem;
+use crate::ProjectRootDirPath;
 
 /// If [`AbanDotAbFile`].new() Failed.
 #[derive(Debug)]
@@ -25,8 +25,8 @@ pub struct AbanDotAbFile {
 
 impl AbanDotAbFile {
     /// Creates a new [`AbanDotAbFile`].
-    pub fn new(file_system: &FileSystem) -> Result<Self, Error> {
-        let list = Self::aban_dot_ab_list(file_system);
+    pub fn new(root: &ProjectRootDirPath) -> Result<Self, Error> {
+        let list = Self::aban_dot_ab_list(root);
 
         if list.is_empty() {
             return Err(Error::FileNotFind);
@@ -64,11 +64,11 @@ impl AbanDotAbFile {
 
     /// List of entries in project root directory with Aban.ab name.
     /// - case insensitive.
-    fn aban_dot_ab_list(file_system: &FileSystem) -> Vec<DirEntry> {
+    fn aban_dot_ab_list(root: &ProjectRootDirPath) -> Vec<DirEntry> {
         let mut aban_entries = Vec::<DirEntry>::with_capacity(2);
         let name = OsStr::new("Aban.ab").to_ascii_lowercase();
 
-        for item in file_system.list().unwrap() {
+        for item in root.list().unwrap() {
             let item = item.unwrap();
             if item.file_name().to_ascii_lowercase() == name {
                 aban_entries.push(item);

@@ -1,27 +1,29 @@
 mod aban_dot_ab_file;
 mod cli;
-mod file_system;
-mod sanitize_root_dir_path;
+mod project_root_dir_path;
 
 pub use aban_dot_ab_file::AbanDotAbFile;
 use clap::Parser;
 pub use cli::Cli;
-pub use file_system::FileSystem;
-pub use sanitize_root_dir_path::sanitize_root_dir_path;
+pub use project_root_dir_path::ProjectRootDirPath;
 
 fn main() {
-    let arg_path = std::env::args().next().unwrap();
-    let cli = Cli::parse();
-    let root = sanitize_root_dir_path(&cli.root, arg_path.as_str());
-    if root.is_ok() == false {
-        println!("Project Root Directory Path is InValid! Try Again.");
-    }
-    let root = root.unwrap();
-    let file_system = FileSystem::new(root.as_path());
+    let root = match ProjectRootDirPath::new(
+        &Cli::parse().root,
+        std::env::args().next().unwrap().as_str(),
+    ) {
+        Ok(root) => root,
+        Err(error) => match error {
+            project_root_dir_path::Error::NoDirectory => {
+                println!("Project Root Directory Path is InValid! Try Again.");
+                return;
+            }
+        },
+    };
 
-    println!("Project Root Directory: {}\n", file_system.root().display());
+    println!("Project Root Directory: {}\n", root.path().display());
 
-    let aban_dot_ab = AbanDotAbFile::new(&file_system);
+    let aban_dot_ab = AbanDotAbFile::new(&root);
 
     if let Err(error) = aban_dot_ab {
         println!("Error from Aban.ab File: {:?}\n", error);

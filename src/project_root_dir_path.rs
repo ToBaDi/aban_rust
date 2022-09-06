@@ -1,44 +1,50 @@
-use std::path::PathBuf;
+use std::{
+    fs::{read_dir, ReadDir},
+    io,
+    path::{Path, PathBuf},
+};
 
 #[derive(PartialEq, Debug)]
 pub enum Error {
-    // NoAbsolute,
     NoDirectory,
+}
+
+/// Responsible for reading file system and
+/// providing file and directory information
+/// to the rest of the application.
+#[derive(Debug, PartialEq)]
+pub struct ProjectRootDirPath(PathBuf);
+
+impl ProjectRootDirPath {
+    /// Creates a new [`FileSystem`].
+    /// - cli_root is suppose fo came from [`crate::Cli`]
+    /// - arg_path is suppose to came from [`std::env::args()`].
+    pub fn new(cli_root: &Option<PathBuf>, arg_path: &str) -> Result<Self, Error> {
+        let path = sanitize_root_dir_path(cli_root, arg_path)?;
+        Ok(ProjectRootDirPath(path))
+    }
+
+    /// Returns a reference to the root of this [`FileSystem`].
+    pub fn path(&self) -> &Path {
+        self.0.as_path()
+    }
+
+    /// List of all the items in [`FileSystem`] root directory.
+    pub fn list(&self) -> io::Result<ReadDir> {
+        read_dir(&self.0)
+    }
 }
 
 /// Try to make a proper directory path from command-line argument.
 /// - cli_root is suppose fo came from [`crate::Cli`]
 /// - arg_path is suppose to came from [`std::env::args()`].
-///
-///
-pub fn sanitize_root_dir_path(
-    cli_root: &Option<PathBuf>,
-    arg_path: &str,
-) -> Result<PathBuf, Error> {
+fn sanitize_root_dir_path(cli_root: &Option<PathBuf>, arg_path: &str) -> Result<PathBuf, Error> {
     // Check if Cli input is usable as PathBuf.
     // Or turn arg_root path to PathBuf.
     let path = match cli_root {
         Some(path) => path.to_owned(),
         None => PathBuf::from(arg_path),
     };
-
-    // // Some helper booleans.
-    // let b_is_arg_root_relative = arg_root.is_relative();
-    // let b_is_path_relative = path.is_relative();
-    // let b_is_cli_path = cli_root.is_some();
-    //
-    // // Check if path is relative.
-    // // If CLi path is relative, combine it with arg_root to make it absolute.
-    // // If path and arg_path are relative, return None.
-    // let path = if b_is_path_relative == false {
-    // path.to_owned()
-    // } else if b_is_cli_path && b_is_arg_root_relative == false {
-    // let mut res = arg_root.to_owned();
-    // res.push(path);
-    // res
-    // } else {
-    // return Err(Error::NoAbsolute);
-    // };
 
     // If path is not a directory, pop it!
     let path = {
@@ -57,10 +63,10 @@ pub fn sanitize_root_dir_path(
 }
 
 #[cfg(test)]
-mod tests {
+mod test {
+    use super::sanitize_root_dir_path;
+    use super::Error;
     use std::path::PathBuf;
-
-    use crate::{sanitize_root_dir_path, sanitize_root_dir_path::Error};
 
     #[test]
     fn sanitize_root_dir_path_test() {
