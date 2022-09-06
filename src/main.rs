@@ -17,5 +17,13 @@ fn main() {
     let root = root.unwrap();
     let file_system = FileSystem::new(root.as_path());
 
-    println!("{}", file_system.root().display());
+    println!("{}\n", file_system.root().display());
+
+    load_aban_dot_ab(&file_system);
+}
+
+fn load_aban_dot_ab(file_system: &FileSystem) {
+    for item in file_system.list().unwrap() {
+        println!("{:?}", item);
+    }
 }
