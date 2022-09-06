@@ -1,4 +1,8 @@
-use std::path::Path;
+use std::{
+    fs::{read_dir, ReadDir},
+    io,
+    path::{Path, PathBuf},
+};
 
 /// Responsible for reading file system and
 /// providing file and directory information
@@ -7,28 +11,35 @@ use std::path::Path;
 ///
 ///
 #[derive(Debug, PartialEq)]
-pub struct FileSystem<'a> {
-    root: &'a Path,
+pub struct FileSystem {
+    root: PathBuf,
 }
 
-impl<'a> FileSystem<'a> {
+impl FileSystem {
     /// Creates a new [`FileSystem`].
     ///
     /// # Panics
     ///
     /// Panics if root_path is NOT a directory.
-    pub fn new(root_path: &'a Path) -> Self {
+    pub fn new(root_path: &Path) -> Self {
         assert!(
             root_path.is_dir(),
             "Path Passed to FileSystem::new() should be a Directory Path"
         );
 
-        FileSystem { root: root_path }
+        FileSystem {
+            root: root_path.to_owned(),
+        }
     }
 
     /// Returns a reference to the root of this [`FileSystem`].
-    pub fn root(&self) -> &'a Path {
-        self.root
+    pub fn root(&self) -> &Path {
+        self.root.as_path()
+    }
+
+    /// List of all the items in [`FileSystem`] root directory.
+    pub fn list(&self) -> io::Result<ReadDir> {
+        read_dir(&self.root)
     }
 }
 
@@ -56,9 +67,7 @@ mod test {
         let path_dir = get_path_dir();
         assert_eq!(
             FileSystem::new(path_dir.as_path()),
-            FileSystem {
-                root: path_dir.as_path()
-            }
+            FileSystem { root: path_dir }
         );
     }
 
