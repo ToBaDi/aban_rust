@@ -1,9 +1,9 @@
+mod aban_dot_ab_file;
 mod cli;
 mod file_system;
 mod sanitize_root_dir_path;
 
-use std::{ffi::OsStr, fs::DirEntry};
-
+pub use aban_dot_ab_file::AbanDotAbFile;
 use clap::Parser;
 pub use cli::Cli;
 pub use file_system::FileSystem;
@@ -20,24 +20,4 @@ fn main() {
     let file_system = FileSystem::new(root.as_path());
 
     println!("{}\n", file_system.root().display());
-
-    find_aban_dot_ab(&file_system);
-}
-
-fn find_aban_dot_ab(file_system: &FileSystem) {
-    let mut aban_entries = Vec::<DirEntry>::with_capacity(2);
-    let name = OsStr::new("Aban.ab").to_ascii_lowercase();
-
-    for item in file_system.list().unwrap() {
-        let item = item.unwrap();
-        println!("{:?}", item.file_name());
-        if item.file_name().to_ascii_lowercase() == name {
-            aban_entries.push(item);
-        }
-    }
-
-    println!();
-    for item in aban_entries {
-        println!("{:?}", item);
-    }
 }
