@@ -53,12 +53,12 @@ impl AbanDotAbFile {
     }
 
     /// Returns a reference to the data of this [`AbanDotAbFile`].
-    fn data(&self) -> &str {
+    pub fn data(&self) -> &str {
         &self.data
     }
 
     /// Returns the length of this [`AbanDotAbFile`].
-    fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.len
     }
 
