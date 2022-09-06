@@ -19,8 +19,6 @@ pub enum Error {
 pub struct AbanDotAbFile {
     /// Buffer were keep the Aban.ab file data.
     data: String,
-    /// Number of bytes were read to data.
-    len: usize,
 }
 
 impl AbanDotAbFile {
@@ -42,24 +40,18 @@ impl AbanDotAbFile {
         };
 
         let mut data = String::new();
-        let len = 0;
 
         match file.read_to_string(&mut data) {
-            Ok(len) => len,
+            Ok(_) => {}
             Err(error) => return Err(Error::OnReadFile(error)),
         };
 
-        Ok(AbanDotAbFile { data, len })
+        Ok(AbanDotAbFile { data })
     }
 
     /// Returns a reference to the data of this [`AbanDotAbFile`].
     pub fn data(&self) -> &str {
         &self.data
-    }
-
-    /// Returns the length of this [`AbanDotAbFile`].
-    pub fn len(&self) -> usize {
-        self.len
     }
 
     /// List of entries in project root directory with Aban.ab name.
