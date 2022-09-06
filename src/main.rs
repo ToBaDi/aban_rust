@@ -23,9 +23,13 @@ fn main() {
 
     println!("Project Root Directory: {}\n", root.path().display());
 
-    let aban_dot_ab = AbanDotAbFile::new(&root);
+    let aban_dot_ab = match AbanDotAbFile::new(&root) {
+        Ok(aban) => aban,
+        Err(error) => {
+            println!("Error from Aban.ab File: {:?}\n", error);
+            return;
+        }
+    };
 
-    if let Err(error) = aban_dot_ab {
-        println!("Error from Aban.ab File: {:?}\n", error);
-    }
+    println!("string len {}", aban_dot_ab.data().len());
 }
