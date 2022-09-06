@@ -6,6 +6,6 @@ use std::path::PathBuf;
 #[clap(author, version, about, long_about = None)]
 pub struct Cli {
     /// Project root directory path.
-    #[clap(short, long, value_parser, value_name = "Root Directory")]
+    #[clap(value_parser, value_name = "Root Directory")]
     pub root: Option<PathBuf>,
 }
