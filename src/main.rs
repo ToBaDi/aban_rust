@@ -21,7 +21,7 @@ fn main() {
 
     println!("{}\n", file_system.root().display());
 
-    load_aban_dot_ab(&file_system);
+    find_aban_dot_ab(&file_system);
 }
 
 fn find_aban_dot_ab(file_system: &FileSystem) {
