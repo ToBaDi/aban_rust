@@ -12,8 +12,8 @@ struct TaskManager {}
 /// It probably needs rewrite and clarification for final, real use.
 fn main() {
     let mut intermediate_data_structure = IntermediateDataStructure::new();
-    let result = frontend::start(&mut intermediate_data_structure);
-    let result = backend::start(&intermediate_data_structure);
+    let _result = frontend::start(&mut intermediate_data_structure);
+    let _result = backend::start(&intermediate_data_structure);
 }
 /*
 Project Reader.
