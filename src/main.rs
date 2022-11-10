@@ -7,24 +7,26 @@ use clap::Parser;
 pub use cli::Cli;
 pub use project_root_dir_path::ProjectRootDirPath;
 
+struct ExpectationManager {}
+
 /// For now, main serve as a playground and test-field.
 /// It probably needs rewrite and clarification for final, real use.
 fn main() {
     /*
-    Project Raeder.
+    Project Reader.
     Package Reader.
     Module Reader.
     File Reader.
-    Line Raeder.
+    Line Reader.
     Section Reader.
     */
 
     /*
     Front end that reads Aban files.
         Read Aban.ab.
-        Search all the directories specifid in that file.
+        Search all the directories specified in that file.
         Read al the source files in those directories.
-        Find spectations based on those files.
+        Find speciations based on those files.
         Satisfy those expectation with those files.
         Collect errors.
         Collect project data.
