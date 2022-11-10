@@ -4,7 +4,7 @@ use std::{
     io::{self, Read},
 };
 
-use crate::ProjectRootDirPath;
+use super::project_root_dir_path::ProjectRootDirPath;
 
 /// If [`AbanDotAbFile`].new() Failed.
 #[derive(Debug)]
@@ -15,8 +15,14 @@ pub enum Error {
     OnReadFile(io::Error),
 }
 
+impl Into<super::Error> for Error {
+    fn into(self) -> super::Error {
+        super::Error::OnAbanDotAbFile(self)
+    }
+}
+
 /// Responsible to load and keep Aban.ab file data.
-#[derive(Debug)]
+#[derive(Debug, Default, PartialEq, Eq)]
 pub struct AbanDotAbFile {
     /// Buffer were keep the Aban.ab file data.
     data: String,
@@ -74,7 +80,7 @@ impl AbanDotAbFile {
 
 #[cfg(test)]
 mod test {
-    use crate::{AbanDotAbFile, ProjectRootDirPath};
+    use super::{AbanDotAbFile, ProjectRootDirPath};
     use std::{
         fs::{self, File},
         io::Write,
@@ -115,10 +121,10 @@ mod test {
         let result = AbanDotAbFile::new(&root);
         let error = result.unwrap_err();
         match error {
-            crate::aban_dot_ab_file::Error::FileNotFind => (),
-            crate::aban_dot_ab_file::Error::MultipleFile => panic!("Wrong error!"),
-            crate::aban_dot_ab_file::Error::OnOpenFile(_) => panic!("Wrong error!"),
-            crate::aban_dot_ab_file::Error::OnReadFile(_) => panic!("Wrong error!"),
+            super::Error::FileNotFind => (),
+            super::Error::MultipleFile => panic!("Wrong error!"),
+            super::Error::OnOpenFile(_) => panic!("Wrong error!"),
+            super::Error::OnReadFile(_) => panic!("Wrong error!"),
         }
     }
 

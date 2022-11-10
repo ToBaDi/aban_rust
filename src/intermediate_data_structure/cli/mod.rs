@@ -2,7 +2,7 @@ use clap::Parser;
 use std::path::PathBuf;
 
 /// Responsible for command-line argument parsing.
-#[derive(Parser)]
+#[derive(Parser, Debug, PartialEq, Eq)]
 #[clap(author, version, about, long_about = None)]
 pub struct Cli {
     /// Project root directory path.

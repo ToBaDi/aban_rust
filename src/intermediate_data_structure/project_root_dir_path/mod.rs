@@ -7,15 +7,21 @@ use std::{
     path::{Path, PathBuf},
 };
 
-#[derive(PartialEq, Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Error {
     NoDirectory,
+}
+
+impl Into<super::Error> for Error {
+    fn into(self) -> super::Error {
+        super::Error::OnProjectRootDirPath(self)
+    }
 }
 
 /// Responsible for reading file system and
 /// providing file and directory information
 /// to the rest of the application.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Default, PartialEq, Eq)]
 pub struct ProjectRootDirPath(PathBuf);
 
 impl ProjectRootDirPath {

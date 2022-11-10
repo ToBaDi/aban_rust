@@ -1,40 +1,41 @@
-mod aban_dot_ab_file;
-mod cli;
-mod project_root_dir_path;
+use intermediate_data_structure::IntermediateDataStructure;
 
-pub use aban_dot_ab_file::AbanDotAbFile;
-use clap::Parser;
-pub use cli::Cli;
-pub use project_root_dir_path::ProjectRootDirPath;
+pub mod intermediate_data_structure;
+
+mod backend;
+mod frontend;
 
 struct ExpectationManager {}
+struct TaskManager {}
 
 /// For now, main serve as a playground and test-field.
 /// It probably needs rewrite and clarification for final, real use.
 fn main() {
-    /*
-    Project Reader.
-    Package Reader.
-    Module Reader.
-    File Reader.
-    Line Reader.
-    Section Reader.
-    */
-
-    /*
-    Front end that reads Aban files.
-        Read Aban.ab.
-        Search all the directories specified in that file.
-        Read al the source files in those directories.
-        Find speciations based on those files.
-        Satisfy those expectation with those files.
-        Collect errors.
-        Collect project data.
-        Build up AST with those data.
-        Generate C files base on AST.
-    */
+    let mut intermediate_data_structure = IntermediateDataStructure::new();
+    let result = frontend::start(&mut intermediate_data_structure);
+    let result = backend::start(&intermediate_data_structure);
 }
+/*
+Project Reader.
+Package Reader.
+Module Reader.
+File Reader.
+Line Reader.
+Section Reader.
+*/
 
+/*
+Front end that reads Aban files.
+    Read Aban.ab.
+    Search all the directories specified in that file.
+    Read al the source files in those directories.
+    Find speciations based on those files.
+    Satisfy those expectation with those files.
+    Collect errors.
+    Collect project data.
+    Build up AST with those data.
+    Generate C files base on AST.
+*/
 /*
     let root = match ProjectRootDirPath::new(
         &Cli::parse().root,

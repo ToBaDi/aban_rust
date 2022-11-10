@@ -1,4 +1,4 @@
-use crate::project_root_dir_path::Error;
+use super::Error;
 use std::path::PathBuf;
 
 /// Try to make a proper directory path from command-line argument.
@@ -35,7 +35,7 @@ pub fn sanitize_root_dir_path(
 mod test {
     use std::path::PathBuf;
 
-    use crate::project_root_dir_path::Error;
+    use super::Error;
 
     use super::sanitize_root_dir_path;
 
