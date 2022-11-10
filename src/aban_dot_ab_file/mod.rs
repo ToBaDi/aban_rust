@@ -16,6 +16,7 @@ pub enum Error {
 }
 
 /// Responsible to load and keep Aban.ab file data.
+#[derive(Debug)]
 pub struct AbanDotAbFile {
     /// Buffer were keep the Aban.ab file data.
     data: String,
@@ -68,5 +69,67 @@ impl AbanDotAbFile {
         }
 
         aban_entries
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::{AbanDotAbFile, ProjectRootDirPath};
+    use std::{
+        fs::{self, File},
+        io::Write,
+        path::PathBuf,
+    };
+
+    const TEST_TEXT: &str = "Purpose is Test\nThis File is for testing AbanDotAbFile object.\n";
+
+    fn project_root_dir_path() -> ProjectRootDirPath {
+        ProjectRootDirPath::new(&None, std::env::args().next().unwrap().as_str()).unwrap()
+    }
+
+    /// Aban.ab path.
+    fn get_path() -> PathBuf {
+        let root = project_root_dir_path();
+        let path = {
+            let mut path = root.path().to_owned();
+            path.push("Aban.ab");
+            path
+        };
+        path
+    }
+
+    fn create_aban_dot_ab() {
+        let file_path = get_path();
+        let mut file = File::create(&file_path).unwrap();
+        file.write_fmt(format_args!("{TEST_TEXT}")).unwrap();
+    }
+
+    fn remove_aban_dot_ab() {
+        let file_path = get_path();
+        fs::remove_file(&file_path).unwrap();
+    }
+
+    #[test]
+    fn aban_dot_ab_file_not_find() {
+        let root = project_root_dir_path();
+        let result = AbanDotAbFile::new(&root);
+        let error = result.unwrap_err();
+        match error {
+            crate::aban_dot_ab_file::Error::FileNotFind => (),
+            crate::aban_dot_ab_file::Error::MultipleFile => panic!("Wrong error!"),
+            crate::aban_dot_ab_file::Error::OnOpenFile(_) => panic!("Wrong error!"),
+            crate::aban_dot_ab_file::Error::OnReadFile(_) => panic!("Wrong error!"),
+        }
+    }
+
+    #[test]
+    fn aban_dot_ab_file() {
+        create_aban_dot_ab();
+        let root = project_root_dir_path();
+        let result = AbanDotAbFile::new(&root);
+        let aban = result.unwrap();
+        assert_eq!(aban.data, TEST_TEXT);
+        remove_aban_dot_ab();
+        aban_dot_ab_file_not_find();
     }
 }

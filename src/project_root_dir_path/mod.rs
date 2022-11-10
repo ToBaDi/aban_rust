@@ -19,7 +19,7 @@ pub enum Error {
 pub struct ProjectRootDirPath(PathBuf);
 
 impl ProjectRootDirPath {
-    /// Creates a new [`FileSystem`].
+    /// Creates a new [`ProjectRootDirPath`].
     /// - cli_root is suppose fo came from [`crate::Cli`]
     /// - arg_path is suppose to came from [`std::env::args()`].
     pub fn new(cli_root: &Option<PathBuf>, arg_path: &str) -> Result<Self, Error> {
@@ -27,12 +27,12 @@ impl ProjectRootDirPath {
         Ok(ProjectRootDirPath(path))
     }
 
-    /// Returns a reference to the root of this [`FileSystem`].
+    /// Returns a reference to the root of this [`ProjectRootDirPath`].
     pub fn path(&self) -> &Path {
         self.0.as_path()
     }
 
-    /// List of all the items in [`FileSystem`] root directory.
+    /// List of all the items in [`ProjectRootDirPath`] root directory.
     pub fn list(&self) -> io::Result<ReadDir> {
         read_dir(&self.0)
     }
